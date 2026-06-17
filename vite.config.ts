@@ -2,21 +2,20 @@
 // or the app will break with duplicate plugins.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-const BASE = "/redkino/";
+// BASE применяется только для статической сборки под GitHub Pages (PAGES=1).
+// В dev/preview Lovable сайт отдаётся с корня "/", поэтому base должен быть "/".
+const IS_PAGES = process.env.PAGES === "1";
+const BASE = IS_PAGES ? "/redkino/" : "/";
 
 export default defineConfig({
   tanstackStart: {
-    // Keep SSR wrapper for Lovable sandbox; static export comes from Nitro prerender.
     server: { entry: "server" },
   },
   vite: {
-    // Так ассеты в собранном index.html будут ссылаться на /redkino/assets/...
     base: BASE,
   },
   nitro: {
-    preset: "github_pages",
-    // Тип wrapper-а узкий, поэтому расширяем через каст: baseURL и prerender
-    // понимаются Nitro в рантайме.
+    preset: IS_PAGES ? "github_pages" : undefined,
     ...({
       baseURL: BASE,
       prerender: {
@@ -25,6 +24,5 @@ export default defineConfig({
         routes: ["/", "/404.html"],
       },
     } as Record<string, unknown>),
-    // github_pages пресет сам создаёт .nojekyll и 404.html.
   },
 });

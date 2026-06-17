@@ -2,8 +2,8 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-// Должно совпадать с base в vite.config.ts. На GitHub Pages сайт живёт под /redkino/.
-const BASE_PATH = "/redkino";
+// Должно совпадать с base в vite.config.ts. На GitHub Pages — /redkino, в Lovable-превью — /.
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";
 
 export const getRouter = () => {
   const queryClient = new QueryClient();
