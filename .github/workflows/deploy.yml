@@ -19,15 +19,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+          
       - run: bun install --frozen-lockfile
-      - run: bun run build:pages
+      
+      # Запускаем только чистую сборку клиента Vite с флагом PAGES
+      - run: PAGES=1 bun run build
+      
       - uses: actions/configure-pages@v5
+      
+      # Загружаем файлы из реальной папки, куда Vite их сложил (см. логи)
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public
+          path: dist/client
 
   deploy:
     needs: build
