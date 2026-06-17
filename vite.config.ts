@@ -1,18 +1,30 @@
 // @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, nitro (build-only using cloudflare as a default target),
-//     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
-//     error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+// or the app will break with duplicate plugins.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+
+const BASE = "/redkino/";
 
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
+    // Keep SSR wrapper for Lovable sandbox; static export comes from Nitro prerender.
     server: { entry: "server" },
   },
-  // Force the Vercel output when this repo is imported into Vercel.
-  // Lovable's own sandbox/publish pipeline still forces its managed target.
-  nitro: { preset: "vercel" },
+  vite: {
+    // Так ассеты в собранном index.html будут ссылаться на /redkino/assets/...
+    base: BASE,
+  },
+  nitro: {
+    preset: "github_pages",
+    // Тип wrapper-а узкий, поэтому расширяем через каст: baseURL и prerender
+    // понимаются Nitro в рантайме.
+    ...({
+      baseURL: BASE,
+      prerender: {
+        crawlLinks: true,
+        failOnError: false,
+        routes: ["/", "/404.html"],
+      },
+    } as Record<string, unknown>),
+    // github_pages пресет сам создаёт .nojekyll и 404.html.
+  },
 });
