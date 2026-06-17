@@ -15,13 +15,16 @@ export default defineConfig({
   },
   nitro: {
     preset: "github_pages",
-    baseURL: BASE,
-    // Полностью статический выход — никаких серверных функций в рантайме.
-    prerender: {
-      crawlLinks: true,
-      failOnError: false,
-      routes: ["/", "/404.html"],
-    },
+    // Тип wrapper-а узкий, поэтому расширяем через каст: baseURL и prerender
+    // понимаются Nitro в рантайме.
+    ...({
+      baseURL: BASE,
+      prerender: {
+        crawlLinks: true,
+        failOnError: false,
+        routes: ["/", "/404.html"],
+      },
+    } as Record<string, unknown>),
     // github_pages пресет сам создаёт .nojekyll и 404.html.
   },
 });
