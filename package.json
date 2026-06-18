@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:pages": "PAGES=1 vite build && rm -rf dist && cp -r .output/public dist && touch dist/.nojekyll",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

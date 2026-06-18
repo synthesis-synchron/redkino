@@ -6,31 +6,13 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig(() => {
-  const isPages = process.env.PAGES === "1";
-
-  return {
-    tanstackStart: isPages
-      ? {
-          // Отключаем SSR для GitHub Pages и включаем генерацию статики
-          prerender: {
-            routes: ["/"],
-          },
-        }
-      : {
-          server: { entry: "server" },
-        },
-    vite: {
-      base: isPages ? "/redkino/" : "/",
-    },
-    nitro: isPages
-      ? {
-          preset: "github-pages",
-          baseURL: "/redkino/",
-          static: true, // Генерируем только чистую статику без сервера
-        }
-      : {
-          preset: "netlify",
-        },
-  };
+export default defineConfig({
+  tanstackStart: {
+    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+    // nitro/vite builds from this
+    server: { entry: "server" },
+  },
+  // Force the Vercel output when this repo is imported into Vercel.
+  // Lovable's own sandbox/publish pipeline still forces its managed target.
+  nitro: { preset: "vercel" },
 });
