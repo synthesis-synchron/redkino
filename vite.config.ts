@@ -14,13 +14,5 @@ export default defineConfig({
   },
   // Static export: создаёт готовые HTML/CSS/JS в .output/public,
   // которые можно залить на обычный хостинг (reg.ru shared).
-  // Lovable sandbox/publish использует свой managed preset и это не ломает.
-  nitro: {
-    preset: "static",
-    prerender: {
-      routes: ["/"],
-      crawlLinks: true,
-      failOnError: false,
-    },
-  },
+  nitro: { preset: "static" },
 });
