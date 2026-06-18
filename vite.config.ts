@@ -12,7 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  // Force the Vercel output when this repo is imported into Vercel.
-  // Lovable's own sandbox/publish pipeline still forces its managed target.
-  nitro: { preset: "vercel" },
+  // Static export: создаёт готовые HTML/CSS/JS в .output/public,
+  // которые можно залить на обычный хостинг (reg.ru shared).
+  nitro: { preset: "static" },
 });
